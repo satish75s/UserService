@@ -1,6 +1,7 @@
 package com.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,25 +19,27 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	@PostMapping("/new")
+	@PostMapping("/newUser")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String addNewUser(@RequestBody UserInfo userInfo) {
 		return userService.addUser(userInfo);
 	}
 
 	@GetMapping("/welcome")
 	public String message() {
-
 		return "Hello My World";
 	}
 
 	@GetMapping("/admin")
-	//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String adminMessage() {
 		return "Hello My World for ADMIN";
 	}
 
 	@GetMapping("/user")
-//	@PreAuthorize("hasAuthority('ROLE_USER')")
+	//@PreAuthorize("hasRole('USER')")  
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String userMessage() {
 		return "Hello My World for USER";
 	}
